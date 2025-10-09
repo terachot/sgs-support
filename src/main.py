@@ -143,6 +143,7 @@ async def main(page: ft.Page):
 
                 browser_instance["playwright"] = pw
                 browser_instance["browser"] = browser
+                await asyncio.sleep(5)
 
                 if web_page.url == home_workpage:
                     await work_page(e)
@@ -635,3 +636,4 @@ async def main(page: ft.Page):
 
 
 asyncio.run(ft.app(main))
+
