@@ -14,13 +14,13 @@ browser_instance = {
 
 # กำหนดค่าต่าง ๆ
 students = []
-#login_workpage = "https://sgs.bopp-obec.info/sgs/" #หน้าเข้าระบบ
-#home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
-#all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
-#mid_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts1-Table.aspx" #หน้ากรอกก่อนกลางภาค
-#final_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts2-Table.aspx" #หน้ากรอกหลังกลางภาค
-#attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
-#study_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsL/Edit-TblTranscriptsL-Table.aspx" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
+login_workpage = "https://sgs.bopp-obec.info/sgs/" #หน้าเข้าระบบ
+home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
+all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
+mid_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts1-Table.aspx" #หน้ากรอกก่อนกลางภาค
+final_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts2-Table.aspx" #หน้ากรอกหลังกลางภาค
+attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
+study_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsL/Edit-TblTranscriptsL-Table.aspx" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
 input_username = "input[name='ctl00$PageContent$UserName']" #ช่องกรอก username
 input_password = "input[name='ctl00$PageContent$Password']" #ช่องกรอก password
 button_login = "a[id='ctl00_PageContent_OKButton__Button']"  #ปุ่ม login
@@ -30,13 +30,13 @@ input_attribute = "input[id='ctl00_PageContent_TblTranscriptsQSaveButton']" #บ
 intput_study = "input[id='ctl00_PageContent_TblTranscriptsLSaveButton']" #บรรทึกข้อมูล การอ่าน คิดวิเคราะห์ และเขียน
 
 # ค่าทดสอบ
-login_workpage = "http://127.0.0.1:5500/" #หน้าเข้าระบบ
-home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
-all_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
-mid_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts1-Table.html" #หน้ากรอกก่อนกลางภาค
-final_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts2-Table.html" #หน้ากรอกหลังกลางภาค
-attribute_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsQ-Table.html" #หน้ากรอกคุณลักษณะอันพึงประสงค์
-study_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsL-Table.html" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
+#login_workpage = "http://127.0.0.1:5500/" #หน้าเข้าระบบ
+#home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
+#all_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
+#mid_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts1-Table.html" #หน้ากรอกก่อนกลางภาค
+#final_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts2-Table.html" #หน้ากรอกหลังกลางภาค
+#attribute_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsQ-Table.html" #หน้ากรอกคุณลักษณะอันพึงประสงค์
+#study_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsL-Table.html" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
 
 async def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.SYSTEM
@@ -632,5 +632,6 @@ async def main(page: ft.Page):
         tab_row,
         footer_row,
     )
+
 
 asyncio.run(ft.app(main))
