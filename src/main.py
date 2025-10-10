@@ -1,6 +1,7 @@
 import flet as ft
 import asyncio
 import os
+import sys
 import webbrowser
 from playwright.async_api import async_playwright
 from openpyxl import load_workbook
@@ -16,7 +17,7 @@ browser_instance = {
 students = []
 login_workpage = "https://sgs.bopp-obec.info/sgs/" #หน้าเข้าระบบ
 home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
-all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
+all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.aspx" #หน้ากรอกตลอดภาคเรียน
 mid_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts1-Table.aspx" #หน้ากรอกก่อนกลางภาค
 final_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts2-Table.aspx" #หน้ากรอกหลังกลางภาค
 attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
@@ -41,8 +42,8 @@ intput_study = "input[id='ctl00_PageContent_TblTranscriptsLSaveButton']" #บร
 async def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.SYSTEM
     page.title = "SGS Support"
-    page.window.height = 540
-    page.window.width = 960
+    page.window.height = 720
+    page.window.width = 1280
     page.window.min_height = 540
     page.window.min_width = 960
     page.padding = ft.padding.symmetric(vertical=5, horizontal=20)
@@ -52,11 +53,18 @@ async def main(page: ft.Page):
 
     username = ft.TextField(label="ชื่อผู้ใช้",width=300, text_align=ft.TextAlign.CENTER)
     password = ft.TextField(label="รหัสผ่าน",width=300, text_align=ft.TextAlign.CENTER, password=True, can_reveal_password=True)
-    result = ft.TextField(value="รอการเข้าสู่ระบบ", text_size=14, text_align=ft.TextAlign.LEFT, multiline=True, min_lines=2, max_lines=6 , expand=True)
+    result = ft.TextField(value="รอการเข้าสู่ระบบ", text_size=14, text_align=ft.TextAlign.LEFT, multiline=True, min_lines=2, max_lines=8 , expand=True)
+
+    def resource_path(relative_path):
+        """คืน path ที่ใช้ได้ทั้งตอนรันปกติและตอนรันจาก .exe"""
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, relative_path)
+        return os.path.join(os.path.abspath("."), relative_path)
 
     # ไฟล์ตัวอย่าง
     def open_file(e):
-        file_path = os.path.abspath("assets/sgs.xlsx")
+        #file_path = os.path.abspath("assets/sgs.xlsx")
+        file_path = resource_path("assets/sgs.xlsx")
         webbrowser.open(f"file:///{file_path}")
 
     # ไฟล์จากผู้ใช้งาน
@@ -124,6 +132,7 @@ async def main(page: ft.Page):
     async def logout_menu(e):
         await browser_instance["wp"].locator(button_logout).click()
         await login_page(e)
+        await close_web(e)
         result.value = "ออกจากระบบสำเร็จ"
         page.update()
     logout = ft.ElevatedButton(text="logout", on_click=logout_menu)
@@ -143,18 +152,22 @@ async def main(page: ft.Page):
 
                 browser_instance["playwright"] = pw
                 browser_instance["browser"] = browser
-                await asyncio.sleep(5)
 
-                if web_page.url == home_workpage:
+                while browser_instance["wp"].url != home_workpage:
+                    await asyncio.sleep(0.6)
+                #print(home_workpage)
+                #print(browser_instance["wp"].url)
+
+                if browser_instance["wp"].url == home_workpage:
                     await work_page(e)
                     result.value = "เข้าใช้งานสำเร็จ"
                     page.update()
                 else:
-                    result.value = "เข้าใช้งานไม่สำเร็จ"
                     await close_web(e)
+                    result.value = f"รหัสผิดพลาด เข้าใช้งานไม่สำเร็จ"
                     page.update()
             except:
-                result.value = "เข้าใช้งานไม่สำเร็จ"
+                result.value = f"\nเข้าใช้งานไม่สำเร็จ"
                 await close_web(e)
                 page.update()
         else:
@@ -169,11 +182,16 @@ async def main(page: ft.Page):
             await browser_instance["playwright"].stop()
             browser_instance["browser"] = None
             browser_instance["playwright"] = None
-            result.value = "ปิดเว็บเรียบร้อยแล้ว"
+            browser_instance["wp"] = None
+            result.value += f"\nปิดเว็บเรียบร้อยแล้ว"
             page.update()
         else:
-            result.value = "ยังไม่มี browser ที่เปิดอยู่"
+            result.value += f"\nยังไม่มี browser ที่เปิดอยู่"
             page.update()
+    
+    #async def windows_close(e):
+    #    print("Shutting down...")
+    #    await asyncio.sleep(0.1)
 
     async def score_before(e):
         if browser_instance["wp"].url == mid_workpage:
@@ -296,7 +314,7 @@ async def main(page: ft.Page):
                         std_id_text = await browser_instance["wp"].locator(std_id_selector).inner_text()
                         std_id_actual = int(std_id_text.strip())
                     except Exception as ex:
-                        result.value += f"ไม่พบ stdID ที่ selector {std_id_selector}: {ex}\n"
+                        result.value += f"ไม่พบ ID ที่ selector {std_id_selector}: {ex}\n"
                         page.update()
                         continue
                     
@@ -482,8 +500,13 @@ async def main(page: ft.Page):
                 content=ft.Container(
                     content=ft.Column(
                         [
-                            ft.ElevatedButton(text="เลือกไฟล์ Excel",on_click=lambda _: file_picker.pick_files(allow_multiple=False, allowed_extensions=["xlsx"]),width=300,height=40, bgcolor=ft.Colors.GREEN_300, color=ft.Colors.GREY_900),
-                            ft.ElevatedButton(text="โหลดไฟล์ตัวอย่าง",on_click=open_file,width=300,height=40, bgcolor=ft.Colors.ORANGE_300, color=ft.Colors.GREY_900),
+                            ft.Row(
+                                [
+                                ft.ElevatedButton(text="เลือกไฟล์ Excel",on_click=lambda _: file_picker.pick_files(allow_multiple=False, allowed_extensions=["xlsx"]),width=300,height=40, bgcolor=ft.Colors.GREEN_300, color=ft.Colors.GREY_900),
+                                ft.ElevatedButton(text="โหลดไฟล์ตัวอย่าง",on_click=open_file,width=300,height=40, bgcolor=ft.Colors.ORANGE_300, color=ft.Colors.GREY_900),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
                             ft.DataTable(
                                 heading_row_height=0,
                                 column_spacing=30,
@@ -558,8 +581,6 @@ async def main(page: ft.Page):
                         [
                             make_button(mid_workpage),
                             ft.ElevatedButton(text="ลงคะแนนก่อนกลางภาค",on_click=score_before,width=300,height=45, bgcolor=ft.Colors.ORANGE_300, color=ft.Colors.GREY_900),
-                            make_button(all_workpage),
-                            ft.ElevatedButton(text="ลงคะแนนตลอดภาคเรียน",on_click=score_all,width=300,height=45, bgcolor=ft.Colors.RED_300, color=ft.Colors.GREY_900),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -577,6 +598,23 @@ async def main(page: ft.Page):
                         [
                             make_button(final_workpage),
                             ft.ElevatedButton(text="ลงคะแนนหลังกลางภาค",on_click=score_after,width=300,height=45, bgcolor=ft.Colors.ORANGE_300, color=ft.Colors.GREY_900),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=15,
+                    ),
+                    alignment=ft.alignment.center,
+                    padding=20,
+                ),
+            ),
+            ft.Tab(
+                text="   ลงคะแนน ตลอดภาคเรียน   ",
+                icon=ft.Icons.BACKUP_TABLE_ROUNDED,
+                content=ft.Container(
+                    content=ft.Column(
+                        [
+                            make_button(all_workpage),
+                            ft.ElevatedButton(text="ลงคะแนนตลอดภาคเรียน",on_click=score_all,width=300,height=45, bgcolor=ft.Colors.RED_300, color=ft.Colors.GREY_900),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -622,10 +660,11 @@ async def main(page: ft.Page):
                 ),
             ),
         ],
-        expand=5,
+        expand=6,
     )
-
     tab_row.visible = False
+    
+    #page.on_close = windows_close
 
     page.add(
         header_row,
@@ -634,6 +673,4 @@ async def main(page: ft.Page):
         footer_row,
     )
 
-
 asyncio.run(ft.app(main))
-
