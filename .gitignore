@@ -1,0 +1,8 @@
+build/
+env/
+
+sgs.iss
+sgs.nsi
+test_import.py
+test_input.py
+test_sgs.xlsx
