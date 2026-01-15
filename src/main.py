@@ -3,41 +3,35 @@ import asyncio
 import os
 import sys
 import webbrowser
-from playwright.async_api import async_playwright
 from openpyxl import load_workbook
-
-# เก็บ browser playwright web_page ไว้เป็น global
-browser_instance = {
-    "playwright": None,
-    "browser": None,
-    "wp": None,
-}
+from get_data_from_web import StudentScraper
 
 # กำหนดค่าต่าง ๆ
 students = []
-login_workpage = "https://sgs.bopp-obec.info/sgs/" #หน้าเข้าระบบ
-home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
-all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.aspx" #หน้ากรอกตลอดภาคเรียน
-mid_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts1-Table.aspx" #หน้ากรอกก่อนกลางภาค
-final_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts2-Table.aspx" #หน้ากรอกหลังกลางภาค
-attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
-study_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsL/Edit-TblTranscriptsL-Table.aspx" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
-input_username = "input[name='ctl00$PageContent$UserName']" #ช่องกรอก username
-input_password = "input[name='ctl00$PageContent$Password']" #ช่องกรอก password
-button_login = "a[id='ctl00_PageContent_OKButton__Button']"  #ปุ่ม login
-button_logout = "a[id='ctl00__PageHeader__SignIn']" #ปุ่ม logout
-input_score = "input[id='ctl00_PageContent_TblTranscriptsSaveButton']" #บรรทึกข้อมูล คะแนน
-input_attribute = "input[id='ctl00_PageContent_TblTranscriptsQSaveButton']" #บรรทึกข้อมูล คุณลักษณะอันพึงประสงค์
-intput_study = "input[id='ctl00_PageContent_TblTranscriptsLSaveButton']" #บรรทึกข้อมูล การอ่าน คิดวิเคราะห์ และเขียน
+#login_workpage = "https://sgs.bopp-obec.info/sgs/" #หน้าเข้าระบบ
+#home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
+#all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.aspx" #หน้ากรอกตลอดภาคเรียน
+#mid_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts1-Table.aspx" #หน้ากรอกก่อนกลางภาค
+#final_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts2-Table.aspx" #หน้ากรอกหลังกลางภาค
+#attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
+#study_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsL/Edit-TblTranscriptsL-Table.aspx" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
+
+#input_username = "input[name='ctl00$PageContent$UserName']" #ช่องกรอก username
+#input_password = "input[name='ctl00$PageContent$Password']" #ช่องกรอก password
+#button_login = "a[id='ctl00_PageContent_OKButton__Button']"  #ปุ่ม login
+#button_logout = "a[id='ctl00__PageHeader__SignIn']" #ปุ่ม logout
+#input_score = "input[id='ctl00_PageContent_TblTranscriptsSaveButton']" #บรรทึกข้อมูล คะแนน
+#input_attribute = "input[id='ctl00_PageContent_TblTranscriptsQSaveButton']" #บรรทึกข้อมูล คุณลักษณะอันพึงประสงค์
+#intput_study = "input[id='ctl00_PageContent_TblTranscriptsLSaveButton']" #บรรทึกข้อมูล การอ่าน คิดวิเคราะห์ และเขียน
 
 # ค่าทดสอบ
-#login_workpage = "http://127.0.0.1:5500/" #หน้าเข้าระบบ
-#home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
-#all_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
-#mid_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts1-Table.html" #หน้ากรอกก่อนกลางภาค
-#final_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts2-Table.html" #หน้ากรอกหลังกลางภาค
-#attribute_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsQ-Table.html" #หน้ากรอกคุณลักษณะอันพึงประสงค์
-#study_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsL-Table.html" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
+login_workpage = "http://127.0.0.1:5500/" #หน้าเข้าระบบ
+home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
+all_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
+mid_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts1-Table.html" #หน้ากรอกก่อนกลางภาค
+final_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts2-Table.html" #หน้ากรอกหลังกลางภาค
+attribute_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsQ-Table.html" #หน้ากรอกคุณลักษณะอันพึงประสงค์
+study_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsL-Table.html" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
 
 async def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.SYSTEM
@@ -50,6 +44,8 @@ async def main(page: ft.Page):
     page.window.center()
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    scraper = StudentScraper(url=login_workpage)
 
     username = ft.TextField(label="ชื่อผู้ใช้",width=300, text_align=ft.TextAlign.CENTER)
     password = ft.TextField(label="รหัสผ่าน",width=300, text_align=ft.TextAlign.CENTER, password=True, can_reveal_password=True)
@@ -110,7 +106,7 @@ async def main(page: ft.Page):
     theme_button = ft.Switch(label="Light theme", on_change=theme_changed)
 
     async def goto_webpage(e,wp):
-        await browser_instance["wp"].goto(wp)
+        await scraper.change_page(wp)
 
     def make_button(url):
         async def handler(e):
@@ -130,7 +126,7 @@ async def main(page: ft.Page):
         page.update()
 
     async def logout_menu(e):
-        await browser_instance["wp"].locator(button_logout).click()
+        await scraper.logout_web()
         await login_page(e)
         await close_web(e)
         result.value = "ออกจากระบบสำเร็จ"
@@ -139,52 +135,30 @@ async def main(page: ft.Page):
     logout.visible = False
 
     async def open_web(e):
-        if browser_instance["browser"] is None:
-            pw = await async_playwright().start()
-            browser = await pw.chromium.launch(channel="chrome", headless=False)
-            web_page = await browser.new_page()
-            browser_instance["wp"] = web_page
-            await browser_instance["wp"].goto(login_workpage)
-            try:
-                await web_page.locator(input_username).fill(username.value)
-                await web_page.locator(input_password).fill(password.value)
-                await web_page.locator(button_login).click()
+        await scraper.open_web()
+        if scraper.page is None:
+            wt = 0
+            while scraper.get_url() != home_workpage:
+                wt += 1
+                await asyncio.sleep(0.6)
+                if wt == 30:
+                    raise Exception("การเชื่อมต่อใช้เวลานานเกินไป")
 
-                browser_instance["playwright"] = pw
-                browser_instance["browser"] = browser
-
-                wt = 0
-                while browser_instance["wp"].url != home_workpage:
-                    wt += 1
-                    await asyncio.sleep(0.6)
-                    if wt == 30:
-                        raise Exception("การเชื่อมต่อใช้เวลานานเกินไป")
-
-                if browser_instance["wp"].url == home_workpage:
-                    await work_page(e)
-                    result.value = "เข้าใช้งานสำเร็จ"
-                    page.update()
-                else:
-                    await close_web(e)
-                    result.value = f"รหัสผิดพลาด เข้าใช้งานไม่สำเร็จ"
-                    page.update()
-            except Exception as ex:
-                result.value = f"\nเข้าใช้งานไม่สำเร็จ: {ex}"
+            if scraper.get_url() == home_workpage:
+                await work_page(e)
+                result.value = "เข้าใช้งานสำเร็จ"
+                page.update()
+            else:
                 await close_web(e)
+                result.value = f"ผิดพลาด เข้าใช้งานไม่สำเร็จ"
                 page.update()
         else:
             #print("Browser เปิดอยู่แล้ว")
             result.value = "Browser เปิดอยู่แล้ว"
-        #result.value = web_page.url
-        page.update()
 
     async def close_web(e):
-        if browser_instance["browser"]:
-            await browser_instance["browser"].close()
-            await browser_instance["playwright"].stop()
-            browser_instance["browser"] = None
-            browser_instance["playwright"] = None
-            browser_instance["wp"] = None
+        if scraper.get_url():
+            scraper.close_web()
             result.value += f"\nปิดเว็บเรียบร้อยแล้ว"
             page.update()
         else:
@@ -196,7 +170,7 @@ async def main(page: ft.Page):
     #    await asyncio.sleep(0.1)
 
     async def score_before(e):
-        if browser_instance["wp"].url == mid_workpage:
+        if scraper.get_url() == mid_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -212,7 +186,7 @@ async def main(page: ft.Page):
                     # ดึง stdID จากหน้าเว็บ
                     std_id_selector = f"#std_id_ctl{str(web_id).zfill(2)}"
                     try:
-                        std_id_text = await browser_instance["wp"].locator(std_id_selector).inner_text()
+                        std_id_text = await scraper.page.locator(std_id_selector).inner_text()
                         std_id_actual = int(std_id_text.strip())
                     except Exception as ex:
                         result.value += f"ไม่พบ stdID ที่ selector {std_id_selector}: {ex}\n"
@@ -227,7 +201,7 @@ async def main(page: ft.Page):
                             value = student[j]
                             if value is not None:
                                 input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{web_id}_{key}"
-                                await browser_instance["wp"].fill(f"#{input_id}", str(value))
+                                await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป
@@ -247,7 +221,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_after(e):
-        if browser_instance["wp"].url == final_workpage:
+        if scraper.page.url == final_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -263,7 +237,7 @@ async def main(page: ft.Page):
                     # ดึง stdID จากหน้าเว็บ
                     std_id_selector = f"#std_id_ctl{str(web_id).zfill(2)}"
                     try:
-                        std_id_text = await browser_instance["wp"].locator(std_id_selector).inner_text()
+                        std_id_text = await scraper.page.locator(std_id_selector).inner_text()
                         std_id_actual = int(std_id_text.strip())
                     except Exception as ex:
                         result.value += f"ไม่พบ stdID ที่ selector {std_id_selector}: {ex}\n"
@@ -278,7 +252,7 @@ async def main(page: ft.Page):
                             value = student[j]
                             if value is not None:
                                 input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{web_id}_{key}"
-                                await browser_instance["wp"].fill(f"#{input_id}", str(value))
+                                await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป
@@ -297,7 +271,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_all(e):
-        if browser_instance["wp"].url == all_workpage:
+        if scraper.page.url == all_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -313,7 +287,7 @@ async def main(page: ft.Page):
                     # ดึง stdID จากหน้าเว็บ
                     std_id_selector = f"#std_id_ctl{str(web_id).zfill(2)}"
                     try:
-                        std_id_text = await browser_instance["wp"].locator(std_id_selector).inner_text()
+                        std_id_text = await scraper.page.locator(std_id_selector).inner_text()
                         std_id_actual = int(std_id_text.strip())
                     except Exception as ex:
                         result.value += f"ไม่พบ ID ที่ selector {std_id_selector}: {ex}\n"
@@ -328,7 +302,7 @@ async def main(page: ft.Page):
                             value = student[j]
                             if value is not None: # ยังไม่ได้ตรวจสอบ id ก่อนลงข้อมูล
                                 input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{web_id}_{key}"
-                                await browser_instance["wp"].fill(f"#{input_id}", str(value))
+                                await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป
@@ -347,7 +321,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_attribute(e):
-        if browser_instance["wp"].url == attribute_workpage:
+        if scraper.page.url == attribute_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -363,7 +337,7 @@ async def main(page: ft.Page):
                     # ดึง stdID จากหน้าเว็บ
                     std_id_selector = f"#std_id_ctl{str(web_id).zfill(2)}"
                     try:
-                        std_id_text = await browser_instance["wp"].locator(std_id_selector).inner_text()
+                        std_id_text = await scraper.page.locator(std_id_selector).inner_text()
                         std_id_actual = int(std_id_text.strip())
                     except Exception as ex:
                         result.value += f"ไม่พบ stdID ที่ selector {std_id_selector}: {ex}\n"
@@ -378,7 +352,7 @@ async def main(page: ft.Page):
                             value = student[j]
                             if value is not None: # ยังไม่ได้ตรวจสอบ id ก่อนลงข้อมูล
                                 input_id = f"ctl00_PageContent_TblTranscriptsQTableControlRepeater_ctl{web_id}_{key}"
-                                await browser_instance["wp"].fill(f"#{input_id}", str(value))
+                                await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป
@@ -397,7 +371,7 @@ async def main(page: ft.Page):
             page.update()
     
     async def score_study(e):
-        if browser_instance["wp"].url == study_workpage:
+        if scraper.page.url == study_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -413,7 +387,7 @@ async def main(page: ft.Page):
                     # ดึง stdID จากหน้าเว็บ
                     std_id_selector = f"#std_id_ctl{str(web_id).zfill(2)}"
                     try:
-                        std_id_text = await browser_instance["wp"].locator(std_id_selector).inner_text()
+                        std_id_text = await scraper.page.locator(std_id_selector).inner_text()
                         std_id_actual = int(std_id_text.strip())
                     except Exception as ex:
                         result.value += f"ไม่พบ stdID ที่ selector {std_id_selector}: {ex}\n"
@@ -430,7 +404,7 @@ async def main(page: ft.Page):
                             value = student[j]
                             if value is not None: # ยังไม่ได้ตรวจสอบ id ก่อนลงข้อมูล
                                 input_id = f"ctl00_PageContent_TblTranscriptsLTableControlRepeater_ctl{web_id}_{key}"
-                                await browser_instance["wp"].fill(f"#{input_id}", str(value))
+                                await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป

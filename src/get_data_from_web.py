@@ -68,6 +68,7 @@ class StudentScraper:
     async def logout_web(self):
         """ออกจากระบบ"""
         button_logout = "a[id='ctl00__PageHeader__SignIn']" #ปุ่ม logout
+        
         await self.page.locator(button_logout).click()
 
     async def close_web(self):
