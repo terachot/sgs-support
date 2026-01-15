@@ -153,10 +153,12 @@ async def main(page: ft.Page):
                 browser_instance["playwright"] = pw
                 browser_instance["browser"] = browser
 
+                wt = 0
                 while browser_instance["wp"].url != home_workpage:
+                    wt += 1
                     await asyncio.sleep(0.6)
-                #print(home_workpage)
-                #print(browser_instance["wp"].url)
+                    if wt == 30:
+                        raise Exception("การเชื่อมต่อใช้เวลานานเกินไป")
 
                 if browser_instance["wp"].url == home_workpage:
                     await work_page(e)
@@ -166,8 +168,8 @@ async def main(page: ft.Page):
                     await close_web(e)
                     result.value = f"รหัสผิดพลาด เข้าใช้งานไม่สำเร็จ"
                     page.update()
-            except:
-                result.value = f"\nเข้าใช้งานไม่สำเร็จ"
+            except Exception as ex:
+                result.value = f"\nเข้าใช้งานไม่สำเร็จ: {ex}"
                 await close_web(e)
                 page.update()
         else:
@@ -495,7 +497,7 @@ async def main(page: ft.Page):
         animation_duration=300,
         tabs=[
             ft.Tab(
-                text="         คู่มือใช้งาน         ",
+                text="         การใช้งาน         ",
                 icon=ft.Icons.HOME,
                 content=ft.Container(
                     content=ft.Column(

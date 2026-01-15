@@ -77,6 +77,11 @@ For more details on building Linux package, refer to the [Linux Packaging Guide]
 ```
 flet build windows -v
 ```
+ถ้าติดที่ flutter แจ้งว่าเวอร์ชั้นของภาษา 3.9 ใหม่เกินให้ปรับในไฟล์ pubspec.yaml ตรง webview_flutter_android เป็น ^3.16.0
 
+<<<<<<< HEAD
 ถ้าติดที่ flutter แจ้งว่าเวอร์ชั้นของภาษา 3.9 ใหม่เกินให้ปรับในไฟล์ pubspec.yaml ตรง webview_flutter_android เป็น ^3.16.0
 For more details on building Windows package, refer to the [Windows Packaging Guide](https://flet.dev/docs/publish/windows/).
+=======
+For more details on building Windows package, refer to the [Windows Packaging Guide](https://flet.dev/docs/publish/windows/).
+>>>>>>> 815d9bb1617a53d52a2bd56973935b1581c61992
