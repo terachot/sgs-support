@@ -16,10 +16,6 @@ students = []
 #attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
 #study_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsL/Edit-TblTranscriptsL-Table.aspx" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
 
-#input_username = "input[name='ctl00$PageContent$UserName']" #ช่องกรอก username
-#input_password = "input[name='ctl00$PageContent$Password']" #ช่องกรอก password
-#button_login = "a[id='ctl00_PageContent_OKButton__Button']"  #ปุ่ม login
-#button_logout = "a[id='ctl00__PageHeader__SignIn']" #ปุ่ม logout
 #input_score = "input[id='ctl00_PageContent_TblTranscriptsSaveButton']" #บรรทึกข้อมูล คะแนน
 #input_attribute = "input[id='ctl00_PageContent_TblTranscriptsQSaveButton']" #บรรทึกข้อมูล คุณลักษณะอันพึงประสงค์
 #intput_study = "input[id='ctl00_PageContent_TblTranscriptsLSaveButton']" #บรรทึกข้อมูล การอ่าน คิดวิเคราะห์ และเขียน
@@ -135,13 +131,16 @@ async def main(page: ft.Page):
     logout.visible = False
 
     async def open_web(e):
-        await scraper.open_web()
-        if scraper.page is None:
+        if scraper.browser is None:
+            await scraper.open_web()
+            await scraper.login_web(username.value, password.value)
             wt = 0
-            while scraper.get_url() != home_workpage:
+            while await scraper.get_url() != home_workpage:
                 wt += 1
                 await asyncio.sleep(0.6)
                 if wt == 30:
+                    result.value = "การเชื่อมต่อใช้เวลานานเกินไป"
+                    page.update()
                     raise Exception("การเชื่อมต่อใช้เวลานานเกินไป")
 
             if scraper.get_url() == home_workpage:
@@ -157,7 +156,7 @@ async def main(page: ft.Page):
             result.value = "Browser เปิดอยู่แล้ว"
 
     async def close_web(e):
-        if scraper.get_url():
+        if not scraper.page :
             scraper.close_web()
             result.value += f"\nปิดเว็บเรียบร้อยแล้ว"
             page.update()
@@ -170,15 +169,18 @@ async def main(page: ft.Page):
     #    await asyncio.sleep(0.1)
 
     async def score_before(e):
-        if scraper.get_url() == mid_workpage:
+        if await scraper.get_url() == mid_workpage:
             try:
                 result.value = ""
-                filled_count = 0
-                web_index = 0
-                excel_index = 0
-                headers = students[0]
+                filled_count = 0 #จำนวนคนที่กรอกสำเร็จ
+                web_index = 0 #แถวที่กำลังทำการกรอกในเว็บ
+                excel_index = 0 #แถวข้อมูลใน excel
+                headers = students[0] #กำหนดหัวตาราง
                 i = len(students) - 1
                 while web_index <= i and excel_index <= i:
+
+                    '''###################ต้องทำใหม่####################'''
+
                     student = students[excel_index + 1]
                     web_id = str(web_index).zfill(2) # id สำหรับแถวกรอกข้อมูล
                     std_id = int(student[0]) # ค่า id ของนักเรียนในไฟล์ xlsx
@@ -221,7 +223,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_after(e):
-        if scraper.page.url == final_workpage:
+        if await scraper.page.url == final_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -271,7 +273,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_all(e):
-        if scraper.page.url == all_workpage:
+        if await scraper.page.url == all_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -321,7 +323,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_attribute(e):
-        if scraper.page.url == attribute_workpage:
+        if await scraper.page.url == attribute_workpage:
             try:
                 result.value = ""
                 filled_count = 0
@@ -371,7 +373,7 @@ async def main(page: ft.Page):
             page.update()
     
     async def score_study(e):
-        if scraper.page.url == study_workpage:
+        if await scraper.page.url == study_workpage:
             try:
                 result.value = ""
                 filled_count = 0
