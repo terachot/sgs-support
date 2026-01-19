@@ -7,6 +7,7 @@ async def main():
 
     # ดึงข้อมูลจากหน้าแรก
     data1 = await scraper.get_data()
+    #print(data1[0]['name'])
     for x in data1:
         print(x['index'], x['id'], x['name'])
 
