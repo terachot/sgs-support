@@ -216,7 +216,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_after(e):
-        if await scraper.page.url == final_workpage:
+        if await scraper.get_url() == final_workpage:
             try:
                 result.value = ""
                 web_datas = await scraper.get_data() #ข้อมูลทั้งหมดจากหน้าเว็บมี index, id, name
@@ -263,7 +263,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_all(e):
-        if await scraper.page.url == all_workpage:
+        if await scraper.get_url() == all_workpage:
             try:
                 result.value = ""
                 web_datas = await scraper.get_data() #ข้อมูลทั้งหมดจากหน้าเว็บมี index, id, name
@@ -310,7 +310,7 @@ async def main(page: ft.Page):
             page.update()
 
     async def score_attribute(e):
-        if await scraper.page.url == attribute_workpage:
+        if await scraper.get_url() == attribute_workpage:
             try:
                 result.value = ""
                 web_datas = await scraper.get_data() #ข้อมูลทั้งหมดจากหน้าเว็บมี index, id, name
@@ -357,7 +357,7 @@ async def main(page: ft.Page):
             page.update()
     
     async def score_study(e):
-        if await scraper.page.url == study_workpage:
+        if await scraper.get_url() == study_workpage:
             try:
                 result.value = ""
                 web_datas = await scraper.get_data() #ข้อมูลทั้งหมดจากหน้าเว็บมี index, id, name
