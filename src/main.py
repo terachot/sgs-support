@@ -8,26 +8,26 @@ from get_data_from_web import StudentScraper
 
 # กำหนดค่าต่าง ๆ
 students = []
-#login_workpage = "https://sgs.bopp-obec.info/sgs/" #หน้าเข้าระบบ
-#home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
-#all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.aspx" #หน้ากรอกตลอดภาคเรียน
-#mid_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts1-Table.aspx" #หน้ากรอกก่อนกลางภาค
-#final_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts2-Table.aspx" #หน้ากรอกหลังกลางภาค
-#attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
-#study_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsL/Edit-TblTranscriptsL-Table.aspx" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
+login_workpage = "https://sgs.bopp-obec.info/sgs/" #หน้าเข้าระบบ
+home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
+all_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts-Table.aspx" #หน้ากรอกตลอดภาคเรียน
+mid_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts1-Table.aspx" #หน้ากรอกก่อนกลางภาค
+final_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscripts/Edit-TblTranscripts2-Table.aspx" #หน้ากรอกหลังกลางภาค
+attribute_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsQ/Edit-TblTranscriptsQ-Table.aspx" #หน้ากรอกคุณลักษณะอันพึงประสงค์
+study_workpage = "https://sgs.bopp-obec.info/sgs/TblTranscriptsL/Edit-TblTranscriptsL-Table.aspx" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
 
 input_score = "input[id='ctl00_PageContent_TblTranscriptsSaveButton']" #บรรทึกข้อมูล คะแนน
-#input_attribute = "input[id='ctl00_PageContent_TblTranscriptsQSaveButton']" #บรรทึกข้อมูล คุณลักษณะอันพึงประสงค์
-#intput_study = "input[id='ctl00_PageContent_TblTranscriptsLSaveButton']" #บรรทึกข้อมูล การอ่าน คิดวิเคราะห์ และเขียน
+input_attribute = "input[id='ctl00_PageContent_TblTranscriptsQSaveButton']" #บรรทึกข้อมูล คุณลักษณะอันพึงประสงค์
+input_study = "input[id='ctl00_PageContent_TblTranscriptsLSaveButton']" #บรรทึกข้อมูล การอ่าน คิดวิเคราะห์ และเขียน
 
 # ค่าทดสอบ
-login_workpage = "http://127.0.0.1:5500/" #หน้าเข้าระบบ
-home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
-all_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
-mid_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts1-Table.html" #หน้ากรอกก่อนกลางภาค
-final_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts2-Table.html" #หน้ากรอกหลังกลางภาค
-attribute_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsQ-Table.html" #หน้ากรอกคุณลักษณะอันพึงประสงค์
-study_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsL-Table.html" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
+#login_workpage = "http://127.0.0.1:5500/" #หน้าเข้าระบบ
+#home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
+#all_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts-Table.html" #หน้ากรอกตลอดภาคเรียน
+#mid_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts1-Table.html" #หน้ากรอกก่อนกลางภาค
+#final_workpage = "http://127.0.0.1:5500/Edit-TblTranscripts2-Table.html" #หน้ากรอกหลังกลางภาค
+#attribute_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsQ-Table.html" #หน้ากรอกคุณลักษณะอันพึงประสงค์
+#study_workpage = "http://127.0.0.1:5500/Edit-TblTranscriptsL-Table.html" #หน้ากรอกการอ่าน คิดวิเคราะห์ และเขียน
 
 async def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.SYSTEM
@@ -177,9 +177,9 @@ async def main(page: ft.Page):
                 web_index = 0 #แถวที่กำลังทำการกรอกในเว็บ
                 excel_index = 0 #แถวข้อมูลใน excel
                 headers = students[0] #กำหนดหัวตาราง
+                n = len(web_datas)
                 i = len(students) - 1
-                #print(f"จำนวน นร. : {i} type{type(i)}")
-                while web_index < i and excel_index <= i:
+                while web_index < n and excel_index <= i:
                     # ดึงค่ารหัสนักเรียนจากในเว็บด้วย web_index จาก web_datas
                     w_id = int(web_datas[web_index]["id"])
                     # ดึงค่ารหัสนักเรียนจากตัวแปร students ด้วยตัวแปร excel_index
@@ -193,7 +193,7 @@ async def main(page: ft.Page):
                                 continue  # ข้ามช่องที่ไม่ใช่ input
                             value = student[j]
                             if value is not None:
-                                input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{str(web_index+1).zfill(2)}_{key}"
+                                input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{str(web_index).zfill(2)}_{key}"
                                 await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
@@ -224,9 +224,10 @@ async def main(page: ft.Page):
                 web_index = 0 #แถวที่กำลังทำการกรอกในเว็บ
                 excel_index = 0 #แถวข้อมูลใน excel
                 headers = students[0] #กำหนดหัวตาราง
+                n = len(web_datas)
                 i = len(students) - 1
                 #print(f"จำนวน นร. : {i} type{type(i)}")
-                while web_index < i and excel_index <= i:
+                while web_index < n and excel_index <= i:
                     # ดึงค่ารหัสนักเรียนจากในเว็บด้วย web_index จาก web_datas
                     w_id = int(web_datas[web_index]["id"])
                     # ดึงค่ารหัสนักเรียนจากตัวแปร students ด้วยตัวแปร excel_index
@@ -240,7 +241,7 @@ async def main(page: ft.Page):
                                 continue  # ข้ามช่องที่ไม่ใช่ input
                             value = student[j]
                             if value is not None:
-                                input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{str(web_index+1).zfill(2)}_{key}"
+                                input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{str(web_index).zfill(2)}_{key}"
                                 await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
@@ -265,21 +266,23 @@ async def main(page: ft.Page):
     async def score_all(e):
         if await scraper.get_url() == all_workpage:
             try:
+                #print("ลงคะแนนหน้าตลอดภาคเรียน")
                 result.value = ""
                 web_datas = await scraper.get_data() #ข้อมูลทั้งหมดจากหน้าเว็บมี index, id, name
                 filled_count = 0 #จำนวนคนที่กรอกสำเร็จ
                 web_index = 0 #แถวที่กำลังทำการกรอกในเว็บ
                 excel_index = 0 #แถวข้อมูลใน excel
                 headers = students[0] #กำหนดหัวตาราง
+                n = len(web_datas)
                 i = len(students) - 1
-                #print(f"จำนวน นร. : {i} type{type(i)}")
-                while web_index < i and excel_index <= i:
+                #print(web_datas)
+                while web_index < n and excel_index <= i:
                     # ดึงค่ารหัสนักเรียนจากในเว็บด้วย web_index จาก web_datas
                     w_id = int(web_datas[web_index]["id"])
                     # ดึงค่ารหัสนักเรียนจากตัวแปร students ด้วยตัวแปร excel_index
                     student = students[excel_index + 1]
                     e_id = student[0]
-                    #print(f"web id : {w_id} web index : {web_index}\nexcel id : {e_id} excel index : {web_index}")
+                    #print(f"web id : {w_id} excel id : {e_id}")
                     # เทียบค่ารหัสนักเรียนจาก w_id กับ e_id
                     if w_id == e_id: # ถ้าตรงกันให้กรอกข้อมูลในแถวนั้น แล้วเพิ่มค่า web_index และ excel_index ไป 1 ค่า
                         for j, key in enumerate(headers):
@@ -287,7 +290,7 @@ async def main(page: ft.Page):
                                 continue  # ข้ามช่องที่ไม่ใช่ input
                             value = student[j]
                             if value is not None: # ยังไม่ได้ตรวจสอบ id ก่อนลงข้อมูล
-                                input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{str(web_index+1).zfill(2)}_{key}"
+                                input_id = f"ctl00_PageContent_TblTranscriptsTableControlRepeater_ctl{str(web_index).zfill(2)}_{key}"
                                 await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
@@ -297,9 +300,12 @@ async def main(page: ft.Page):
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
                     else: # ถ้าค่า id ที่จะกรอกน้อยกว่า id ในเว็บให้ข้ามเป็น id ถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป
+                    #print(f"web index : {web_index} excel index : {excel_index}")
                 
                 await scraper.page.locator(input_score).click()
-                result.value += f"\nลงข้อมูลก่อนกลางภาคเสร็จสิ้น\nลงข้อมูลเสร็จสิ้นทั้งหมด {filled_count} คน"
+                result.value += f"\nลงข้อมูลก่อนกลางภาคเสร็จสิ้น\nลงข้อมูลเสร็จสิ้นทั้งหมด {filled_count} คน\nใช้ web index ไป {web_index} excel index ไป {excel_index}"
+                #print(f"จำนวน นร. ในไฟล์ : {i}")
+                #print(f"จำนวน นร. หน้าเว็บ : {n}")
                 page.update()
             except Exception as ex:
                 result.value += f"\nลงเข้ามูลก่อนกลางภาคไม่สำเร็จ : {ex}"
@@ -318,9 +324,10 @@ async def main(page: ft.Page):
                 web_index = 0 #แถวที่กำลังทำการกรอกในเว็บ
                 excel_index = 0 #แถวข้อมูลใน excel
                 headers = students[0] #กำหนดหัวตาราง
+                n = len(web_datas)
                 i = len(students) - 1
                 #print(f"จำนวน นร. : {i} type{type(i)}")
-                while web_index < i and excel_index <= i:
+                while web_index < n and excel_index <= i:
                     # ดึงค่ารหัสนักเรียนจากในเว็บด้วย web_index จาก web_datas
                     w_id = int(web_datas[web_index]["id"])
                     # ดึงค่ารหัสนักเรียนจากตัวแปร students ด้วยตัวแปร excel_index
@@ -334,7 +341,7 @@ async def main(page: ft.Page):
                                 continue  # ข้ามช่องที่ไม่ใช่ input
                             value = student[j]
                             if value is not None: # ยังไม่ได้ตรวจสอบ id ก่อนลงข้อมูล
-                                input_id = f"ctl00_PageContent_TblTranscriptsQTableControlRepeater_ctl{str(web_index+1).zfill(2)}_{key}"
+                                input_id = f"ctl00_PageContent_TblTranscriptsQTableControlRepeater_ctl{str(web_index).zfill(2)}_{key}"
                                 await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
@@ -345,7 +352,7 @@ async def main(page: ft.Page):
                     else: # ถ้าค่า id ที่จะกรอกน้อยกว่า id ในเว็บให้ข้ามเป็น id ถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป
                 
-                await scraper.page.locator(input_score).click()
+                await scraper.page.locator(input_attribute).click()
                 result.value += f"\nลงข้อมูลก่อนกลางภาคเสร็จสิ้น\nลงข้อมูลเสร็จสิ้นทั้งหมด {filled_count} คน"
                 page.update()
             except Exception as ex:
@@ -365,9 +372,10 @@ async def main(page: ft.Page):
                 web_index = 0 #แถวที่กำลังทำการกรอกในเว็บ
                 excel_index = 0 #แถวข้อมูลใน excel
                 headers = students[0] #กำหนดหัวตาราง
+                n = len(web_datas)
                 i = len(students) - 1
                 #print(f"จำนวน นร. : {i} type{type(i)}")
-                while web_index < i and excel_index <= i:
+                while web_index < n and excel_index <= i:
                     # ดึงค่ารหัสนักเรียนจากในเว็บด้วย web_index จาก web_datas
                     w_id = int(web_datas[web_index]["id"])
                     # ดึงค่ารหัสนักเรียนจากตัวแปร students ด้วยตัวแปร excel_index
@@ -381,7 +389,7 @@ async def main(page: ft.Page):
                                 continue  # ข้ามช่องที่ไม่ใช่ input
                             value = student[j]
                             if value is not None: # ยังไม่ได้ตรวจสอบ id ก่อนลงข้อมูล
-                                input_id = f"ctl00_PageContent_TblTranscriptsLTableControlRepeater_ctl{str(web_index+1).zfill(2)}_{key}"
+                                input_id = f"ctl00_PageContent_TblTranscriptsLTableControlRepeater_ctl{str(web_index).zfill(2)}_{key}"
                                 await scraper.page.fill(f"#{input_id}", str(value))
                         filled_count += 1
                         web_index += 1 # เลื่อนแถวตารางกรอกถัดไป
@@ -392,7 +400,7 @@ async def main(page: ft.Page):
                     else: # ถ้าค่า id ที่จะกรอกน้อยกว่า id ในเว็บให้ข้ามเป็น id ถัดไป
                         excel_index += 1 # เลื่อน id ในไฟล์ถัดไป
                 
-                await scraper.page.locator(input_score).click()
+                await scraper.page.locator(input_study).click()
                 result.value += f"\nลงข้อมูลก่อนกลางภาคเสร็จสิ้น\nลงข้อมูลเสร็จสิ้นทั้งหมด {filled_count} คน"
                 page.update()
             except Exception as ex:

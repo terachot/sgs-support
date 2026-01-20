@@ -27,10 +27,11 @@ class StudentScraper:
         input_username = "input[name='ctl00$PageContent$UserName']" #ช่องกรอก username
         input_password = "input[name='ctl00$PageContent$Password']" #ช่องกรอก password
         button_login = "a[id='ctl00_PageContent_OKButton__Button']"  #ปุ่ม login
-        home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
+        #home_workpage = "http://127.0.0.1:5500/Show-TblSchoolInfo.html" #หน้าการใช้งานแรก
+        home_workpage = "https://sgs.bopp-obec.info/sgs/TblSchoolInfo/Show-TblSchoolInfo.aspx" #หน้าการใช้งานแรก
 
-        print(username)
-        print(password)
+        #print(username)
+        #print(password)
 
         await self.page.locator(input_username).fill(username)
         await self.page.locator(input_password).fill(password)
@@ -46,19 +47,23 @@ class StudentScraper:
         rows = self.page.locator('td.tre tbody tr')
         count = await rows.count()
         data = []
-
+        c = 1
         for i in range(count):
             row = rows.nth(i)
-            cells = await row.locator("td").all_text_contents()
-            if not cells:
+            #cells = await row.locator("td").all_text_contents()
+            student_id = await row.locator("td:nth-child(4)").all_text_contents()
+            student_name = await row.locator("td:nth-child(5)").all_text_contents()
+            #print(f"id type {type(student_id)}{student_id}\nname type {type(student_name)}{student_name}")
+            if (not student_id) or (not student_name):
                 continue
-            student_id = cells[3] if len(cells) > 3 else None
-            student_name = cells[4] if len(cells) > 4 else None
+
             data.append({
-                "index": i,
-                "id": student_id,
-                "name": student_name
+                "index": c,
+                "id": student_id[0],
+                "name": student_name[0]
             })
+            c += 1
+        #print(data)
         return data #type list
 
     async def get_url(self):
